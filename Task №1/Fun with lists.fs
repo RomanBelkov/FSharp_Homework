@@ -48,8 +48,6 @@
 
     let testList = reverse [1..10]
     printfn "%A" testList
-<<<<<<< HEAD:F#/List-oriented Functions.fs
-=======
 
 
     //Filters the list
@@ -75,4 +73,3 @@
 
     let newList = generator (fun x -> sqrt(x)) [1.0..10.0]
     printfn "%A" newList
->>>>>>> List Update:F#/Fun with lists.fs
