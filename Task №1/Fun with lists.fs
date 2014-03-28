@@ -4,7 +4,7 @@
  *)
     
     //Counts numbers of elements present in the list given
-    let rec length list =
+    let length list =
         let rec loop list acc =
             match list with
                 | [] -> acc
