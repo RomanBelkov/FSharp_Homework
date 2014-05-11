@@ -55,10 +55,6 @@ let alignMid lines =
 
         Space (lastS) :: (line'' |> List.rev) |> List.rev) lines
 
-//let testSubject'' = alignMid linesCreated
-//printfn "%A" testSubject''
-//printfn "%A" "--------------------------"
-
 
 [<TestFixture>]
 module test =
