@@ -1,7 +1,42 @@
-﻿open System.Drawing
+﻿open System
+open System.Drawing
 open System.Diagnostics
 open System.Windows.Forms
 open System.Windows.Forms.DataVisualization.Charting
+
+type chartControl(area1 : ChartArea, area2 : ChartArea, s : Series, s' : Series) = 
+    let mutable colC = Color.LightBlue
+    let mutable colM = Color.LightBlue
+    let mutable linesC = ChartDashStyle.Dot
+    let mutable linesM = ChartDashStyle.Dot
+    let mutable serCPUGraph = Color.RoyalBlue
+    let mutable serMemGraph = Color.RoyalBlue
+    member this.CPULinesColor
+        with get () = colC
+        and set (value) = colC <- value
+                          area1.AxisX.MajorGrid.LineColor <- colC
+                          area1.AxisY.MajorGrid.LineColor <- colC
+    member this.CPULinesStyle
+        with get () = linesC
+        and set (value) = linesC <- value
+                          area1.AxisX.MajorGrid.LineDashStyle <- linesC
+                          area1.AxisY.MajorGrid.LineDashStyle <- linesC
+    member this.MemLinesStyle
+        with get () = linesM
+        and set (value) = linesM <- value
+                          area2.AxisX.MajorGrid.LineDashStyle <- linesM
+                          area2.AxisY.MajorGrid.LineDashStyle <- linesM
+    member this.MemLinesColor
+        with get () = colM
+        and set (value) = colM <- value
+                          area2.AxisX.MajorGrid.LineColor <- colM
+                          area2.AxisY.MajorGrid.LineColor <- colM
+    member this.CPUGraphColor
+        with get () = serCPUGraph
+        and set (value) = serCPUGraph <- value; s.Color <- serCPUGraph
+    member this.MemGraphColor
+        with get () = serMemGraph
+        and set (value) = serMemGraph <- value; s'.Color <- serMemGraph
 
 Application.EnableVisualStyles()
 
@@ -17,8 +52,10 @@ let getFreeMem =
         new PerformanceCounter("Memory", "Available MBytes")
     (fun () -> counter.NextValue())
 
-let mainForm = new Form(Visible = true, 
+let form = new Form(Visible = true, 
                         Size = new Size (800, 600))
+let properties = new PropertyGrid(Dock = DockStyle.Right,
+                                  Size = new Size (250, 30))
 let chart = new Chart(Dock = DockStyle.Fill,
                       Palette = ChartColorPalette.Excel,
                       BackColor = Color.WhiteSmoke)
@@ -80,6 +117,10 @@ let start =
     Async.StartImmediate updateCPULoop
     Async.StartImmediate updateMemLoop
 
-mainForm.Controls.Add(chart)
-mainForm.Show()
-Application.Run(mainForm)
+let ctrl = new chartControl(areaC, areaM, series, series')
+properties.SelectedObject <- ctrl 
+
+form.Controls.Add chart
+form.Controls.Add properties
+form.Show()
+Application.Run(form)
