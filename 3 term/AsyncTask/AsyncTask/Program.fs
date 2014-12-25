@@ -20,7 +20,7 @@ let split (s : string) = s.Split([|' '|], StringSplitOptions.RemoveEmptyEntries)
 
 let awaitTask = Async.Ignore << Async.AwaitIAsyncResult
 
-let magic = 2
+let magic = 2000
 
 let randSign = function
     | x when x % 2 = 0 -> " + " 
@@ -49,7 +49,7 @@ let cases = (skipString "x^" >>. pint32 |>> (fun x -> Degree (x)))
             <|> (skipString "cos(x)" >>. preturn Cos)
             <|> (skipString "sin(x)" >>. preturn Sin)
             <|> (skipString "" >>. preturn (Degree (0)))
-let mono = (pfloat .>>. cases) .>> spaces
+let mono = ((pfloat <|> (skipString "" >>. preturn 0.)) .>>. cases) .>> spaces
 
 let signParse = (pchar '+' <|> pchar '-') .>> spaces
 
